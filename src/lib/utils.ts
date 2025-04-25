@@ -20,3 +20,10 @@ export function formatRelativeDate(from: Date) {
   }
   
 }
+
+export function formatNumber(num: number) {
+  return new Intl.NumberFormat('en-US', {
+    notation: 'compact',
+    maximumFractionDigits: 1,
+  }).format(num);
+}
