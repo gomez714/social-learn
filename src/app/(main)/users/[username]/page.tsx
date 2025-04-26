@@ -2,7 +2,6 @@ import { validateRequest } from "@/auth";
 import FollowButton from "@/components/FollowButton";
 import FollowerCount from "@/components/FollowerCount";
 import TrendsSidebar from "@/components/TrendsSidebar";
-import { Button } from "@/components/ui/button";
 import UserAvatar from "@/components/UserAvatar";
 import prisma from "@/lib/prisma";
 import { getUserDataSelect, UserData, FollowerInfo } from "@/lib/types";
@@ -12,6 +11,9 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { cache } from "react";
 import UserPosts from "./UserPosts";
+import Linkify from "@/components/Linkify";
+import EditProfileButton from "./EditProfileButton";
+
 
 interface UserPageProps {
   params: {
@@ -66,7 +68,7 @@ return (
     <div className="w-full min-w-0 space-y-5">
       <UserProfile user={user} loggedInUserId={loggedInUser.id} />
       <div className="rounded-2xl bg-card text-2xl font-bold">
-        <h2 className="text-center text-2xl font-bold">{user.displayName}'s Posts</h2>
+        <h2 className="text-center text-2xl font-bold">{user.displayName}&apos;s Posts</h2>
       </div>
       <UserPosts userId={user.id} />
     </div>
@@ -110,16 +112,18 @@ function UserProfile({user, loggedInUserId}: UserProfileProps) {
           
         </div>
         {user.id === loggedInUserId ? (
-          <Button>Edit Profile</Button>
+          <EditProfileButton user={user} />
         ):(
           <FollowButton userId={user.id} initialState={followerInfo} />
         )}
       </div>
-      {user.bio && (
-        <div className="overflow-hidden whitespace-pre-line break-words">
-          {user.bio}
-        </div>
-      )}
+      <Linkify>
+        {user.bio && (
+          <div className="overflow-hidden whitespace-pre-line break-words">
+            {user.bio}
+          </div>
+        )}
+      </Linkify>
 
     </div>
   )
