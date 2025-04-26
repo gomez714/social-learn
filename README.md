@@ -66,8 +66,8 @@ yarn dev
 - **Frontend**: Next.js, React
 - **Styling**: Tailwind CSS
 - **Authentication**: NextAuth.js
-- **Database**: [Your database choice]
-- **Media Storage**: [Your storage solution]
+- **Database**: postgres and prisma
+- **Media Storage**: UploadThings
 
 ## Contributing
 
