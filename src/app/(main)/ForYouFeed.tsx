@@ -1,14 +1,13 @@
 "use client";
 
 import Post from "@/components/posts/Post";
-import { Button } from "@/components/ui/button";
 import kyInstance from "@/lib/ky";
-import { PostData, PostsPage } from "@/lib/types";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { PostsPage } from "@/lib/types";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import InfiniteScrollContainer from "@/components/InfiniteScrollContainer";
 import PostsLoadingSkeleton from "@/components/posts/PostsLoadingSkeleton";
-import { DeletePostDialog } from "@/components/posts/DeletePostDialog";
+
 export default function ForYouFeed() {
   const {
     data,

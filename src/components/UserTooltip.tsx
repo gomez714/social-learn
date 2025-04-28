@@ -1,11 +1,11 @@
-import { PropsWithChildren } from "react";
+"use client";
 
+import { PropsWithChildren } from "react";
 import { FollowerInfo, UserData } from "@/lib/types"
 import { useSession } from "@/app/(main)/SessionProvider";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import Link from "next/link";
 import UserAvatar from "./UserAvatar";
-import { Button } from "./ui/button";
 import FollowButton from "./FollowButton";
 import Linkify from "./Linkify";
 import FollowerCount from "./FollowerCount";
