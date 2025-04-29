@@ -59,20 +59,47 @@ export async function POST(req: Request,
       return new Response("Unauthorized", { status: 401 });
     }
 
-    await prisma.like.upsert({
+    const post = await prisma.post.findUnique({
       where: {
-        userId_postId: { 
-          userId: loggedInUser.id,
-          postId
-        }
+        id: postId,
       },
-      create: {
-        userId: loggedInUser.id,
-        postId
-      },
-      update: {},
+      select: {
+        userId: true,
+      }
     })
     
+    if (!post) {
+      return new Response("Post not found", { status: 404 });
+    }
+
+    await prisma.$transaction([
+      prisma.like.upsert({
+        where: {
+          userId_postId: { 
+            userId: loggedInUser.id,
+            postId
+          }
+        },
+        create: {
+          userId: loggedInUser.id,
+          postId
+        },
+        update: {},
+      }),
+      ...(post.userId !== loggedInUser.id 
+        ? [
+          prisma.notification.create({
+            data: {
+              recipientId: post.userId,
+            issuerId: loggedInUser.id,
+            postId,
+            type: "LIKE",
+            }
+          })
+        ]
+      : [])
+    ])
+
     return new Response();
     
   } catch (error) {
@@ -91,13 +118,38 @@ export async function DELETE(req: Request,
     if (!loggedInUser) {
       return new Response("Unauthorized", { status: 401 });
     }
-    
-    await prisma.like.deleteMany({
+
+    const post = await prisma.post.findUnique({
       where: {
-        userId: loggedInUser.id,
-        postId
+        id: postId,
+      },
+      select: {
+        userId: true,
       }
     })
+    
+    if (!post) {
+      return new Response("Post not found", { status: 404 });
+    }
+
+    await prisma.$transaction([
+      prisma.like.deleteMany({
+        where: {
+          userId: loggedInUser.id,
+          postId
+        }
+      }),
+      
+      prisma.notification.deleteMany({
+        where: {
+          recipientId: post.userId,
+          issuerId: loggedInUser.id,
+          postId,
+          type: "LIKE",
+        }
+      })
+        
+    ])
 
     return new Response();
 
