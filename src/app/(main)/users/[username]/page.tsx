@@ -29,27 +29,19 @@ const getUser = cache(async (username: string, loggedInUserId: string) => {
   return user;
 });
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { username: string };
-}): Promise<Metadata> {
+export async function generateMetadata(props: { params: { username: string } }): Promise<Metadata> {
   const { user: loggedInUser } = await validateRequest();
 
   if (!loggedInUser) return {};
 
-  const user = await getUser(params.username, loggedInUser.id);
+  const user = await getUser(props.params.username, loggedInUser.id);
 
   return {
     title: `${user.displayName} (@${user.username})`,
   };
 }
 
-export default async function UserPage({
-  params,
-}: {
-  params: { username: string };
-}) {
+export default async function UserPage(props: { params: { username: string } }) {
   const { user: loggedInUser } = await validateRequest();
 
   if (!loggedInUser) {
@@ -60,7 +52,7 @@ export default async function UserPage({
     );
   }
 
-  const user = await getUser(params.username, loggedInUser.id);
+  const user = await getUser(props.params.username, loggedInUser.id);
 
   return (
     <main className="flex w-full min-w-0 gap-5">
