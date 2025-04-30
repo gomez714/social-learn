@@ -28,7 +28,7 @@ export default function LoginForm() {
   });
 
   async function onSubmit(values: LoginValues) {
-    setError(undefined);
+    setError("");
     startTransition(async () => {
       const { error } = await login(values);
       if (error) setError(error);
