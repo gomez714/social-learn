@@ -24,20 +24,21 @@ const getPost = cache(async (postId: string, loggedInUserId: string) => {
   return post;
 });
 
-export async function generateMetadata(props: { params: { postId: string } }): Promise<Metadata> {
+export async function generateMetadata({params}: { params: Promise<{ postId: string }> }): Promise<Metadata> {
   const { user } = await validateRequest();
-
+  const { postId } = await params;
   if (!user) return {};
 
-  const post = await getPost(props.params.postId, user.id);
+  const post = await getPost(postId, user.id);
 
   return {
     title: `${post.user.displayName}: ${post.content.slice(0, 50)}...`,
   };
 }
 
-export default async function PostPage(props: { params: { postId: string } }) {
+export default async function PostPage({params}: { params: Promise<{ postId: string }> }) {
   const { user } = await validateRequest();
+  const { postId } = await params;
 
   if (!user) {
     return (
@@ -47,7 +48,7 @@ export default async function PostPage(props: { params: { postId: string } }) {
     );
   }
 
-  const post = await getPost(props.params.postId, user.id);
+  const post = await getPost(postId, user.id);
 
   return (
     <main className="flex w-full min-w-0 gap-5">
