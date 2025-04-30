@@ -26,10 +26,10 @@ export async function updateUserProfile(values: UpdateUserProfileValues) {
       id: user.id,
       set: {
         name: validatedValues.displayName,
-      }
-    })
+      },
+    });
     return updatedUser;
-  })
+  });
 
   return updatedUser;
 }

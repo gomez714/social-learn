@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useToast } from "@/hooks/use-toast";
 import useFollowerInfo from "@/hooks/useFollowerInfo";
@@ -21,34 +21,38 @@ export default function FollowButton({
   const { data } = useFollowerInfo(userId, initialState);
   const queryKey: QueryKey = ["follower-info", userId];
 
-  const {mutate} = useMutation({
+  const { mutate } = useMutation({
     mutationFn: () =>
       data.isFollowedByUser
         ? kyInstance.delete(`/api/users/${userId}/followers`).json()
         : kyInstance.post(`/api/users/${userId}/followers`).json(),
-      onMutate: async () => {
-        await queryClient.cancelQueries({queryKey});
-        const previousState = queryClient.getQueryData<FollowerInfo>(queryKey);
-        queryClient.setQueryData<FollowerInfo>(queryKey, () => ({
-          followers: (previousState?.followers || 0) + (previousState?.isFollowedByUser ? -1 : 1),
-          isFollowedByUser: !previousState?.isFollowedByUser
-        }))
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey });
+      const previousState = queryClient.getQueryData<FollowerInfo>(queryKey);
+      queryClient.setQueryData<FollowerInfo>(queryKey, () => ({
+        followers:
+          (previousState?.followers || 0) +
+          (previousState?.isFollowedByUser ? -1 : 1),
+        isFollowedByUser: !previousState?.isFollowedByUser,
+      }));
 
-        return {previousState};
-      },
-      onError(error, variables, context) {
-        queryClient.setQueryData(queryKey, context?.previousState);
-        console.error(error);
-        toast({
-          variant: "destructive",
-          description: "Failed to follow user",
-        })
-      },
-      
+      return { previousState };
+    },
+    onError(error, variables, context) {
+      queryClient.setQueryData(queryKey, context?.previousState);
+      console.error(error);
+      toast({
+        variant: "destructive",
+        description: "Failed to follow user",
+      });
+    },
   });
 
   return (
-    <Button variant={data.isFollowedByUser ? "secondary" : "default"} onClick={() => mutate()}>
+    <Button
+      variant={data.isFollowedByUser ? "secondary" : "default"}
+      onClick={() => mutate()}
+    >
       {data.isFollowedByUser ? "Unfollow" : "Follow"}
     </Button>
   );

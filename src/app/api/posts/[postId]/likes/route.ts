@@ -2,11 +2,12 @@ import { validateRequest } from "@/auth";
 import prisma from "@/lib/prisma";
 import { LikeInfo } from "@/lib/types";
 
-export async function GET(req: Request,
-  { params: {postId}}: {params: {postId: string}},
+export async function GET(
+  req: Request,
+  { params: { postId } }: { params: { postId: string } },
 ) {
   try {
-    const {user: loggedInUser} = await validateRequest();
+    const { user: loggedInUser } = await validateRequest();
 
     if (!loggedInUser) {
       return new Response("Unauthorized", { status: 401 });
@@ -17,21 +18,21 @@ export async function GET(req: Request,
         id: postId,
       },
       select: {
-          likes: {
-            where: {
-              userId: loggedInUser.id,
-            },
-            select: {
-              userId: true,
-            }
+        likes: {
+          where: {
+            userId: loggedInUser.id,
           },
-          _count: {
-            select: {
-              likes: true,
-            }
-          }
-      }
-    })
+          select: {
+            userId: true,
+          },
+        },
+        _count: {
+          select: {
+            likes: true,
+          },
+        },
+      },
+    });
 
     if (!post) {
       return new Response("Post not found", { status: 404 });
@@ -40,7 +41,7 @@ export async function GET(req: Request,
     const data: LikeInfo = {
       likes: post._count.likes,
       isLikedByUser: !!post.likes.length,
-    }
+    };
 
     return Response.json(data);
   } catch (error) {
@@ -49,11 +50,12 @@ export async function GET(req: Request,
   }
 }
 
-export async function POST(req: Request,
-  { params: {postId}}: {params: {postId: string}},
+export async function POST(
+  req: Request,
+  { params: { postId } }: { params: { postId: string } },
 ) {
   try {
-    const {user: loggedInUser} = await validateRequest();
+    const { user: loggedInUser } = await validateRequest();
 
     if (!loggedInUser) {
       return new Response("Unauthorized", { status: 401 });
@@ -65,9 +67,9 @@ export async function POST(req: Request,
       },
       select: {
         userId: true,
-      }
-    })
-    
+      },
+    });
+
     if (!post) {
       return new Response("Post not found", { status: 404 });
     }
@@ -75,45 +77,44 @@ export async function POST(req: Request,
     await prisma.$transaction([
       prisma.like.upsert({
         where: {
-          userId_postId: { 
+          userId_postId: {
             userId: loggedInUser.id,
-            postId
-          }
+            postId,
+          },
         },
         create: {
           userId: loggedInUser.id,
-          postId
+          postId,
         },
         update: {},
       }),
-      ...(post.userId !== loggedInUser.id 
+      ...(post.userId !== loggedInUser.id
         ? [
-          prisma.notification.create({
-            data: {
-              recipientId: post.userId,
-            issuerId: loggedInUser.id,
-            postId,
-            type: "LIKE",
-            }
-          })
-        ]
-      : [])
-    ])
+            prisma.notification.create({
+              data: {
+                recipientId: post.userId,
+                issuerId: loggedInUser.id,
+                postId,
+                type: "LIKE",
+              },
+            }),
+          ]
+        : []),
+    ]);
 
     return new Response();
-    
   } catch (error) {
     console.error(error);
     return new Response("Internal Server Error", { status: 500 });
   }
 }
 
-
-export async function DELETE(req: Request,
-  { params: {postId}}: {params: {postId: string}},
+export async function DELETE(
+  req: Request,
+  { params: { postId } }: { params: { postId: string } },
 ) {
   try {
-    const {user: loggedInUser} = await validateRequest();
+    const { user: loggedInUser } = await validateRequest();
 
     if (!loggedInUser) {
       return new Response("Unauthorized", { status: 401 });
@@ -125,9 +126,9 @@ export async function DELETE(req: Request,
       },
       select: {
         userId: true,
-      }
-    })
-    
+      },
+    });
+
     if (!post) {
       return new Response("Post not found", { status: 404 });
     }
@@ -136,23 +137,21 @@ export async function DELETE(req: Request,
       prisma.like.deleteMany({
         where: {
           userId: loggedInUser.id,
-          postId
-        }
+          postId,
+        },
       }),
-      
+
       prisma.notification.deleteMany({
         where: {
           recipientId: post.userId,
           issuerId: loggedInUser.id,
           postId,
           type: "LIKE",
-        }
-      })
-        
-    ])
+        },
+      }),
+    ]);
 
     return new Response();
-
   } catch (error) {
     console.error(error);
     return new Response("Internal Server Error", { status: 500 });

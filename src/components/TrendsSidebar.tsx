@@ -32,8 +32,8 @@ async function WhoToFollow() {
       followers: {
         none: {
           followerId: user.id,
-        }
-      }
+        },
+      },
     },
     select: getUserDataSelect(user.id),
     take: 5,
@@ -60,12 +60,15 @@ async function WhoToFollow() {
               </div>
             </Link>
           </UserTooltip>
-          <FollowButton 
-          userId={user.id} 
-          initialState={{
-            followers: user._count.followers,
-            isFollowedByUser: user.followers.some(({followerId}) => followerId === user.id),
-          }} />
+          <FollowButton
+            userId={user.id}
+            initialState={{
+              followers: user._count.followers,
+              isFollowedByUser: user.followers.some(
+                ({ followerId }) => followerId === user.id,
+              ),
+            }}
+          />
         </div>
       ))}
     </div>

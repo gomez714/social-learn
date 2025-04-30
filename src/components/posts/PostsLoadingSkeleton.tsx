@@ -7,12 +7,12 @@ export default function PostsLoadingSkeleton() {
       <PostLoadingSkeleton />
       <PostLoadingSkeleton />
     </div>
-  )
+  );
 }
 
 function PostLoadingSkeleton() {
-  return(
-    <div className="w-full animate pulse space-y-3 rounded-2xl bg-card p-4 shadow-md">
+  return (
+    <div className="animate pulse w-full space-y-3 rounded-2xl bg-card p-4 shadow-md">
       <div className="flex flex-wrap gap-3">
         <Skeleton className="size-12 rounded-full" />
         <div className="space-y-1.5">
@@ -22,5 +22,5 @@ function PostLoadingSkeleton() {
       </div>
       <Skeleton className="h-16 rounded" />
     </div>
-  )
+  );
 }

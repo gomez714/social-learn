@@ -11,11 +11,14 @@ export default function SignupPage() {
   return (
     <main className="flex h-screen items-center justify-center p-5">
       <div className="flex h-full max-h-[40rem] w-full max-w-[64rem] overflow-hidden rounded-2xl bg-card shadow-2xl">
-        <div className="md:w-1/2 w-full space-y-10 overflow-auto p-10">
+        <div className="w-full space-y-10 overflow-auto p-10 md:w-1/2">
           <div className="space-y-1 text-center">
-            <h1 className="text-3xl font-bold">Sign up for AI Social Learning</h1>
+            <h1 className="text-3xl font-bold">
+              Sign up for AI Social Learning
+            </h1>
             <p className="text-muted-foreground">
-              A social learning platform that helps <span className="italic">you</span> learn faster and smarter.
+              A social learning platform that helps{" "}
+              <span className="italic">you</span> learn faster and smarter.
             </p>
           </div>
           <div className="space-y-5">
@@ -28,7 +31,7 @@ export default function SignupPage() {
         <Image
           src={SignUpImage}
           alt=""
-          className="w-1/2 hidden md:block object-cover"
+          className="hidden w-1/2 object-cover md:block"
         />
       </div>
     </main>

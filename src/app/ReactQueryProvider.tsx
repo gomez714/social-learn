@@ -16,5 +16,5 @@ export default function ReactQueryProvider({
       {children}
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
-  )
+  );
 }

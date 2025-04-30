@@ -30,11 +30,11 @@ export default function PostEditor() {
     reset: resetMediaUploads,
   } = useMediaUpload();
 
-  const {getRootProps, getInputProps, isDragActive} = useDropzone({
-    onDrop: startUpload
-  })
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop: startUpload,
+  });
 
-  const {onClick, ...rootProps} = getRootProps();
+  const { onClick, ...rootProps } = getRootProps();
 
   const editor = useEditor({
     extensions: [
@@ -43,7 +43,7 @@ export default function PostEditor() {
         italic: false,
       }),
       Placeholder.configure({
-        placeholder: "What's crack-a-lackin'?",
+        placeholder: "What's on your mind?",
       }),
     ],
   });
@@ -69,12 +69,11 @@ export default function PostEditor() {
   }
 
   function onPaste(e: ClipboardEvent<HTMLInputElement>) {
-    const files = Array.from(e.clipboardData.items).filter(
-      item => item.kind === "file"
-    ).map(item => item.getAsFile()) as File[];
+    const files = Array.from(e.clipboardData.items)
+      .filter((item) => item.kind === "file")
+      .map((item) => item.getAsFile()) as File[];
     startUpload(files);
   }
-
 
   return (
     <div className="flex flex-col gap-5 rounded-2xl bg-card p-5 shadow-sm">
@@ -84,12 +83,12 @@ export default function PostEditor() {
           <EditorContent
             editor={editor}
             className={cn(
-              "max-h-[20rem] w-full overflow-y-auto rounded-2xl bg-background px-5 py-3", 
-              isDragActive && "outline-dashed outline-primary"
+              "max-h-[20rem] w-full overflow-y-auto rounded-2xl bg-background px-5 py-3",
+              isDragActive && "outline-dashed outline-primary",
             )}
             onPaste={onPaste}
           />
-          <input type="text" {...getInputProps()}/>
+          <input type="text" {...getInputProps()} />
         </div>
       </div>
       {!!attachments.length && (

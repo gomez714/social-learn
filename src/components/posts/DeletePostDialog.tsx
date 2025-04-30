@@ -17,7 +17,11 @@ interface DeletePostDialogProps {
   onClose: () => void;
 }
 
-export function DeletePostDialog({ post, open, onClose }: DeletePostDialogProps) {
+export function DeletePostDialog({
+  post,
+  open,
+  onClose,
+}: DeletePostDialogProps) {
   const mutation = useDeletePostMutation(post);
 
   const handleOpenChange = (open: boolean) => {
@@ -35,7 +39,6 @@ export function DeletePostDialog({ post, open, onClose }: DeletePostDialogProps)
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          
           <LoadingButton
             variant="destructive"
             onClick={() =>
@@ -45,10 +48,13 @@ export function DeletePostDialog({ post, open, onClose }: DeletePostDialogProps)
             }
             loading={mutation.isPending}
           >
-            
             Delete
           </LoadingButton>
-          <Button variant="outline" onClick={onClose} disabled={mutation.isPending}>
+          <Button
+            variant="outline"
+            onClick={onClose}
+            disabled={mutation.isPending}
+          >
             Cancel
           </Button>
         </DialogFooter>

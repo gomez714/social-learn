@@ -18,15 +18,14 @@ export async function GET() {
       where: {
         recipientId: user.id,
         read: false,
-      }
-    })
+      },
+    });
 
     const data: NotificationCountInfo = {
-      unreadCount
-    }
-    
+      unreadCount,
+    };
+
     return Response.json(data);
-    
   } catch (error) {
     console.error(error);
     return Response.json(

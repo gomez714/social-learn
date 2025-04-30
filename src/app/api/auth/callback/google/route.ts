@@ -39,7 +39,6 @@ export async function GET(req: NextRequest) {
       })
       .json<{ sub: string; name: string }>();
 
-      console.log("Google user response:", googleUser);
 
     const existingUser = await prisma.user.findUnique({
       where: {

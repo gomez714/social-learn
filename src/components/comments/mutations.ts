@@ -70,20 +70,20 @@ export function useDeleteCommentMutation() {
     mutationFn: deleteComment,
     onSuccess: async (deletedComment) => {
       const queryKey: QueryKey = ["comments", deletedComment.postId];
-      await queryClient.cancelQueries({ queryKey })
+      await queryClient.cancelQueries({ queryKey });
       queryClient.setQueryData<InfiniteData<CommentsPage, string | null>>(
         queryKey,
         (oldData) => {
-          if(!oldData) return;
+          if (!oldData) return;
           return {
             pageParams: oldData.pageParams,
             pages: oldData.pages.map((page) => ({
               prevCursor: page.prevCursor,
               comments: page.comments.filter((c) => c.id !== deletedComment.id),
             })),
-          }
-        }
-      )
+          };
+        },
+      );
 
       toast({
         description: "Comment deleted",

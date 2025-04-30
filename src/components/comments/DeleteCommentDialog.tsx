@@ -1,6 +1,13 @@
 import { CommentData } from "@/lib/types";
 import { useDeleteCommentMutation } from "./mutations";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "../ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "../ui/dialog";
 import { Button } from "../ui/button";
 import { LoadingButton } from "../LoadingButton";
 
@@ -10,15 +17,18 @@ interface DeleteCommentDialogProps {
   onClose: () => void;
 }
 
-export function DeleteCommentDialog({ comment, open, onClose }: DeleteCommentDialogProps) {
+export function DeleteCommentDialog({
+  comment,
+  open,
+  onClose,
+}: DeleteCommentDialogProps) {
   const mutation = useDeleteCommentMutation();
 
   const handleOpenChange = (open: boolean) => {
     if (!open || !mutation.isPending) {
       onClose();
-
     }
-  }
+  };
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -30,7 +40,6 @@ export function DeleteCommentDialog({ comment, open, onClose }: DeleteCommentDia
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          
           <LoadingButton
             variant="destructive"
             onClick={() =>
@@ -40,10 +49,13 @@ export function DeleteCommentDialog({ comment, open, onClose }: DeleteCommentDia
             }
             loading={mutation.isPending}
           >
-            
             Delete
           </LoadingButton>
-          <Button variant="outline" onClick={onClose} disabled={mutation.isPending}>
+          <Button
+            variant="outline"
+            onClick={onClose}
+            disabled={mutation.isPending}
+          >
             Cancel
           </Button>
         </DialogFooter>

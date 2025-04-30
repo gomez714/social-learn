@@ -9,23 +9,19 @@ import InfiniteScrollContainer from "@/components/InfiniteScrollContainer";
 import PostsLoadingSkeleton from "@/components/posts/PostsLoadingSkeleton";
 
 export default function Bookmarks() {
-  const {
-    data,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    status,
-  } = useInfiniteQuery({
-    queryKey: ["post-feed", "bookmarks"],
-    queryFn: ({ pageParam }) =>
-      kyInstance
-        .get(
-          "/api/posts/bookmarked",
-          pageParam ? { searchParams: { cursor: pageParam } } : {},
-        ).json<PostsPage>(),
-        initialPageParam: null as string | null,
-        getNextPageParam: (lastPage) => lastPage.nextCursor,
-  });
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
+    useInfiniteQuery({
+      queryKey: ["post-feed", "bookmarks"],
+      queryFn: ({ pageParam }) =>
+        kyInstance
+          .get(
+            "/api/posts/bookmarked",
+            pageParam ? { searchParams: { cursor: pageParam } } : {},
+          )
+          .json<PostsPage>(),
+      initialPageParam: null as string | null,
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+    });
 
   const posts = data?.pages.flatMap((page) => page.posts) || [];
 
@@ -33,23 +29,27 @@ export default function Bookmarks() {
     return <PostsLoadingSkeleton />;
   }
 
-  if (status === "success" && !posts.length && !hasNextPage) { 
+  if (status === "success" && !posts.length && !hasNextPage) {
     return (
       <div className="text-center text-muted-foreground">
         No bookmarks found. Bookmark some posts to get started.
       </div>
-    )
+    );
   }
 
   if (status === "error") {
     return (
-      <div className="text-center text-destructive">Error loading bookmarks</div>
+      <div className="text-center text-destructive">
+        Error loading bookmarks
+      </div>
     );
   }
 
   return (
     <InfiniteScrollContainer
-      onBottomReached={() => hasNextPage && !isFetchingNextPage && fetchNextPage()}
+      onBottomReached={() =>
+        hasNextPage && !isFetchingNextPage && fetchNextPage()
+      }
       className="space-y-5"
     >
       {posts.map((post) => (

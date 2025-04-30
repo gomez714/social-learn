@@ -13,7 +13,6 @@ export async function PATCH() {
       );
     }
 
-
     await prisma.notification.updateMany({
       where: {
         recipientId: user.id,
@@ -22,10 +21,9 @@ export async function PATCH() {
       data: {
         read: true,
       },
-    })
+    });
 
     return new Response();
-    
   } catch (error) {
     console.error(error);
     return Response.json(

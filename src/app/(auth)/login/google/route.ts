@@ -5,8 +5,11 @@ import { cookies } from "next/headers";
 export async function GET() {
   const state = generateState();
   const codeVerifier = generateCodeVerifier();
-  
-  const url = await google.createAuthorizationURL(state, codeVerifier, ["profile", "email"]);
+
+  const url = await google.createAuthorizationURL(state, codeVerifier, [
+    "profile",
+    "email",
+  ]);
 
   (await cookies()).set("state", state, {
     path: "/",

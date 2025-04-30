@@ -10,23 +10,23 @@ interface CommentsProps {
 }
 
 export default function Comments({ post }: CommentsProps) {
-
-  const { data, fetchNextPage, hasNextPage, isFetching, status } = useInfiniteQuery({
-    queryKey: ["comments", post.id],
-    queryFn: ({ pageParam }) =>
-      kyInstance
-        .get(
-          `/api/posts/${post.id}/comments`,
-          pageParam ? { searchParams: { cursor: pageParam } } : {},
-        )
-        .json<CommentsPage>(),
-        initialPageParam: null as string | null,
-        getNextPageParam: (firstPage) => firstPage.prevCursor,
-        select: (data) => ({
-          pages: [...data.pages].reverse(),
-          pageParams: [...data.pageParams].reverse(),
-        }),
-      });
+  const { data, fetchNextPage, hasNextPage, isFetching, status } =
+    useInfiniteQuery({
+      queryKey: ["comments", post.id],
+      queryFn: ({ pageParam }) =>
+        kyInstance
+          .get(
+            `/api/posts/${post.id}/comments`,
+            pageParam ? { searchParams: { cursor: pageParam } } : {},
+          )
+          .json<CommentsPage>(),
+      initialPageParam: null as string | null,
+      getNextPageParam: (firstPage) => firstPage.prevCursor,
+      select: (data) => ({
+        pages: [...data.pages].reverse(),
+        pageParams: [...data.pageParams].reverse(),
+      }),
+    });
 
   const comments = data?.pages.flatMap((page) => page.comments) || [];
 
@@ -43,14 +43,12 @@ export default function Comments({ post }: CommentsProps) {
           Load previous comments
         </Button>
       )}
-      {status === "pending" && (
-          <Loader2 className="mx-auto animate-spin" />
-      )}
+      {status === "pending" && <Loader2 className="mx-auto animate-spin" />}
       {status === "success" && !comments.length && (
-          <p className="text-muted-foreground text-center">No comments yet</p>
+        <p className="text-center text-muted-foreground">No comments yet</p>
       )}
       {status === "error" && (
-          <p className="text-destructive text-center">Error loading comments</p>
+        <p className="text-center text-destructive">Error loading comments</p>
       )}
 
       <div className="divide-y">
@@ -59,6 +57,5 @@ export default function Comments({ post }: CommentsProps) {
         ))}
       </div>
     </div>
-  )
-  
+  );
 }

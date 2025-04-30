@@ -1,4 +1,4 @@
-import {LoadingButton} from "@/components/LoadingButton";
+import { LoadingButton } from "@/components/LoadingButton";
 import {
   Dialog,
   DialogContent,

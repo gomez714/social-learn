@@ -2,7 +2,7 @@
 
 import { validateRequest } from "@/auth";
 import prisma from "@/lib/prisma";
-import {  getCommentDataInclude, PostData } from "@/lib/types";
+import { getCommentDataInclude, PostData } from "@/lib/types";
 import { createCommentSchema } from "@/lib/validation";
 
 export async function submitComment({
@@ -27,19 +27,19 @@ export async function submitComment({
       },
       include: getCommentDataInclude(user.id),
     }),
-    ...(post.user.id !== user.id ? [
-      prisma.notification.create({
-        data: {
-          issuerId: user.id,
-          recipientId: post.user.id,
-          type: "COMMENT",
-          postId: post.id,
-        }
-      })
-    ] : []
-    )
-  ])
-
+    ...(post.user.id !== user.id
+      ? [
+          prisma.notification.create({
+            data: {
+              issuerId: user.id,
+              recipientId: post.user.id,
+              type: "COMMENT",
+              postId: post.id,
+            },
+          }),
+        ]
+      : []),
+  ]);
 
   return newComment;
 }

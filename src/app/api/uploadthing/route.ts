@@ -5,5 +5,5 @@ export const { GET, POST } = createRouteHandler({
   router: fileRouter,
   config: {
     token: process.env.NEXT_PUBLIC_UPLOADTHING_TOKEN,
-  }
+  },
 });

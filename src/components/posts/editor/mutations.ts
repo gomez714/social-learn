@@ -1,23 +1,32 @@
-import { useToast } from "@/hooks/use-toast"; 
-import { InfiniteData, QueryFilters, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useToast } from "@/hooks/use-toast";
+import {
+  InfiniteData,
+  QueryFilters,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { submitPost } from "./actions";
 import { PostsPage } from "@/lib/types";
 import { useSession } from "@/app/(main)/SessionProvider";
 
 export function useSubmitPostMutation() {
-  const {toast} = useToast();
+  const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const {user} = useSession();
-  
+  const { user } = useSession();
+
   const mutation = useMutation({
     mutationFn: submitPost,
     onSuccess: async (newPost) => {
       const queryFilter = {
         queryKey: ["post-feed"],
         predicate(query) {
-          return query.queryKey.includes("for-you") || (query.queryKey.includes("user-posts") && query.queryKey.includes(user.id));
-        }
+          return (
+            query.queryKey.includes("for-you") ||
+            (query.queryKey.includes("user-posts") &&
+              query.queryKey.includes(user.id))
+          );
+        },
       } satisfies QueryFilters;
       await queryClient.cancelQueries(queryFilter);
       queryClient.setQueriesData<InfiniteData<PostsPage, string | null>>(
@@ -33,10 +42,11 @@ export function useSubmitPostMutation() {
                   nextCursor: firstPage.nextCursor,
                 },
                 ...oldData.pages.slice(1),
-              ]
-            }
+              ],
+            };
           }
-      })
+        },
+      );
 
       queryClient.invalidateQueries({
         queryKey: queryFilter.queryKey,
@@ -47,17 +57,16 @@ export function useSubmitPostMutation() {
 
       toast({
         description: "Post created successfully",
-      })
+      });
     },
     onError(error) {
       console.error(error);
       toast({
         variant: "destructive",
         description: "Failed to post. Please try again.",
-      })
-    }
-  })
+      });
+    },
+  });
 
   return mutation;
-  
 }

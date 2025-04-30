@@ -11,8 +11,7 @@ interface MenuBarProps {
 }
 
 export default async function MenuBar({ className }: MenuBarProps) {
-
-  const {user} = await validateRequest();
+  const { user } = await validateRequest();
   if (!user) {
     return null;
   }
@@ -25,8 +24,7 @@ export default async function MenuBar({ className }: MenuBarProps) {
       },
     }),
     (await streamServerClient.getUnreadCount(user.id)).total_unread_count,
-  ])
-
+  ]);
 
   return (
     <div className={className}>
@@ -37,11 +35,13 @@ export default async function MenuBar({ className }: MenuBarProps) {
         asChild
       >
         <Link href="/">
-          <Home/>
+          <Home />
           <span className="hidden lg:inline">Home</span>
         </Link>
       </Button>
-      <NotificationsButton initialState={{ unreadCount: unreadNotificationsCount }} />
+      <NotificationsButton
+        initialState={{ unreadCount: unreadNotificationsCount }}
+      />
       <MessagesButton initialState={{ unreadCount: unreadMessagesCount }} />
       <Button
         variant="ghost"

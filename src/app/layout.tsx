@@ -37,7 +37,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <NextSSRPlugin routerConfig={extractRouterConfig(fileRouter)}/>
+        <NextSSRPlugin routerConfig={extractRouterConfig(fileRouter)} />
         <ReactQueryProvider>
           <ThemeProvider
             attribute="class"
@@ -48,8 +48,7 @@ export default function RootLayout({
             {children}
           </ThemeProvider>
         </ReactQueryProvider>
-        <Toaster />           
-
+        <Toaster />
       </body>
     </html>
   );

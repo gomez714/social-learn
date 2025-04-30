@@ -13,29 +13,22 @@ interface SearchResultsProps {
 }
 
 export default function SearchResults({ query }: SearchResultsProps) {
-  const {
-    data,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    status,
-  } = useInfiniteQuery({
-    queryKey: ["post-feed", "search", query],
-    queryFn: ({ pageParam }) =>
-      kyInstance
-        .get(
-          "/api/search",
-          {
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
+    useInfiniteQuery({
+      queryKey: ["post-feed", "search", query],
+      queryFn: ({ pageParam }) =>
+        kyInstance
+          .get("/api/search", {
             searchParams: {
-              q:query,
-              ...(pageParam ? { cursor: pageParam } : {})
-            }
-          }
-        ).json<PostsPage>(),
-        initialPageParam: null as string | null,
-        getNextPageParam: (lastPage) => lastPage.nextCursor,
-        gcTime: 0,
-  });
+              q: query,
+              ...(pageParam ? { cursor: pageParam } : {}),
+            },
+          })
+          .json<PostsPage>(),
+      initialPageParam: null as string | null,
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+      gcTime: 0,
+    });
 
   const posts = data?.pages.flatMap((page) => page.posts) || [];
 
@@ -43,23 +36,25 @@ export default function SearchResults({ query }: SearchResultsProps) {
     return <PostsLoadingSkeleton />;
   }
 
-  if (status === "success" && !posts.length && !hasNextPage) { 
+  if (status === "success" && !posts.length && !hasNextPage) {
     return (
-      <div className="text-center text-muted-foreground">
-        No results found.
-      </div>
-    )
+      <div className="text-center text-muted-foreground">No results found.</div>
+    );
   }
 
   if (status === "error") {
     return (
-      <div className="text-center text-destructive">Error loading search results</div>
+      <div className="text-center text-destructive">
+        Error loading search results
+      </div>
     );
   }
 
   return (
     <InfiniteScrollContainer
-      onBottomReached={() => hasNextPage && !isFetchingNextPage && fetchNextPage()}
+      onBottomReached={() =>
+        hasNextPage && !isFetchingNextPage && fetchNextPage()
+      }
       className="space-y-5"
     >
       {posts.map((post) => (

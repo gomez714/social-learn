@@ -24,18 +24,18 @@ export async function GET(req: NextRequest) {
         recipientId: user.id,
       },
       include: notificationsInclude,
-      orderBy: {createdAt: 'desc'},
+      orderBy: { createdAt: "desc" },
       take: pageSize + 1,
-      cursor: cursor ? {id: cursor} : undefined,
-    })
+      cursor: cursor ? { id: cursor } : undefined,
+    });
 
-    const nextCursor = notifications.length > pageSize ? notifications[pageSize].id : null;
-    
+    const nextCursor =
+      notifications.length > pageSize ? notifications[pageSize].id : null;
 
     const data: NotificationsPage = {
       notifications: notifications.slice(0, pageSize),
       nextCursor,
-    }
+    };
 
     return Response.json(data);
   } catch (error) {

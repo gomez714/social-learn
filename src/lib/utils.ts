@@ -1,8 +1,8 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
 import { formatDate, formatDistanceToNowStrict } from "date-fns";
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 
 export function formatRelativeDate(from: Date) {
@@ -18,12 +18,11 @@ export function formatRelativeDate(from: Date) {
       return formatDate(from, "MMM d, yyyy");
     }
   }
-  
 }
 
 export function formatNumber(num: number) {
-  return new Intl.NumberFormat('en-US', {
-    notation: 'compact',
+  return new Intl.NumberFormat("en-US", {
+    notation: "compact",
     maximumFractionDigits: 1,
   }).format(num);
 }

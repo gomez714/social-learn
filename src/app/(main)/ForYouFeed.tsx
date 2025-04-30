@@ -9,23 +9,19 @@ import InfiniteScrollContainer from "@/components/InfiniteScrollContainer";
 import PostsLoadingSkeleton from "@/components/posts/PostsLoadingSkeleton";
 
 export default function ForYouFeed() {
-  const {
-    data,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    status,
-  } = useInfiniteQuery({
-    queryKey: ["post-feed", "for-you"],
-    queryFn: ({ pageParam }) =>
-      kyInstance
-        .get(
-          "/api/posts/for-you",
-          pageParam ? { searchParams: { cursor: pageParam } } : {},
-        ).json<PostsPage>(),
-        initialPageParam: null as string | null,
-        getNextPageParam: (lastPage) => lastPage.nextCursor,
-  });
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
+    useInfiniteQuery({
+      queryKey: ["post-feed", "for-you"],
+      queryFn: ({ pageParam }) =>
+        kyInstance
+          .get(
+            "/api/posts/for-you",
+            pageParam ? { searchParams: { cursor: pageParam } } : {},
+          )
+          .json<PostsPage>(),
+      initialPageParam: null as string | null,
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+    });
 
   const posts = data?.pages.flatMap((page) => page.posts) || [];
 
@@ -33,12 +29,12 @@ export default function ForYouFeed() {
     return <PostsLoadingSkeleton />;
   }
 
-  if (status === "success" && !posts.length && !hasNextPage) { 
+  if (status === "success" && !posts.length && !hasNextPage) {
     return (
       <div className="text-center text-muted-foreground">
         No posts found. Follow some users to get started.
       </div>
-    )
+    );
   }
 
   if (status === "error") {
@@ -49,7 +45,9 @@ export default function ForYouFeed() {
 
   return (
     <InfiniteScrollContainer
-      onBottomReached={() => hasNextPage && !isFetchingNextPage && fetchNextPage()}
+      onBottomReached={() =>
+        hasNextPage && !isFetchingNextPage && fetchNextPage()
+      }
       className="space-y-5"
     >
       {posts.map((post) => (

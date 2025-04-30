@@ -2,7 +2,11 @@
 
 import kyInstance from "@/lib/ky";
 import { NotificationsPage } from "@/lib/types";
-import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import InfiniteScrollContainer from "@/components/InfiniteScrollContainer";
 import PostsLoadingSkeleton from "@/components/posts/PostsLoadingSkeleton";
@@ -10,27 +14,23 @@ import Notification from "./Notification";
 import { useEffect } from "react";
 
 export default function Notifications() {
-  const {
-    data,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    status,
-  } = useInfiniteQuery({
-    queryKey: ["notifications"],
-    queryFn: ({ pageParam }) =>
-      kyInstance
-        .get(
-          "/api/notifications",
-          pageParam ? { searchParams: { cursor: pageParam } } : {},
-        ).json<NotificationsPage>(),
-        initialPageParam: null as string | null,
-        getNextPageParam: (lastPage) => lastPage.nextCursor,
-  });
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
+    useInfiniteQuery({
+      queryKey: ["notifications"],
+      queryFn: ({ pageParam }) =>
+        kyInstance
+          .get(
+            "/api/notifications",
+            pageParam ? { searchParams: { cursor: pageParam } } : {},
+          )
+          .json<NotificationsPage>(),
+      initialPageParam: null as string | null,
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+    });
 
   const queryClient = useQueryClient();
 
-  const {mutate} = useMutation({
+  const { mutate } = useMutation({
     mutationFn: () => kyInstance.patch("/api/notifications/mark-as-read"),
     onSuccess: () => {
       queryClient.setQueryData(["unread-notifications-count"], {
@@ -40,7 +40,7 @@ export default function Notifications() {
     onError(error) {
       console.error("Error marking notifications as read", error);
     },
-  })
+  });
 
   useEffect(() => {
     mutate();
@@ -52,23 +52,27 @@ export default function Notifications() {
     return <PostsLoadingSkeleton />;
   }
 
-  if (status === "success" && !notifications.length && !hasNextPage) { 
+  if (status === "success" && !notifications.length && !hasNextPage) {
     return (
       <div className="text-center text-muted-foreground">
         No notifications found.
       </div>
-    )
+    );
   }
 
   if (status === "error") {
     return (
-      <div className="text-center text-destructive">Error loading notifications</div>
+      <div className="text-center text-destructive">
+        Error loading notifications
+      </div>
     );
   }
 
   return (
     <InfiniteScrollContainer
-      onBottomReached={() => hasNextPage && !isFetchingNextPage && fetchNextPage()}
+      onBottomReached={() =>
+        hasNextPage && !isFetchingNextPage && fetchNextPage()
+      }
       className="space-y-5"
     >
       {notifications.map((notification) => (

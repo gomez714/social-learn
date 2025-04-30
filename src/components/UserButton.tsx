@@ -74,7 +74,7 @@ export default function UserButton({ className }: UserButtonProps) {
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={() => {
-            queryClient.clear()
+            queryClient.clear();
             logout();
           }}
         >

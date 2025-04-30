@@ -4,16 +4,13 @@ import UserAvatar from "../UserAvatar";
 import Link from "next/link";
 import { formatRelativeDate } from "@/lib/utils";
 import { useSession } from "@/app/(main)/SessionProvider";
-import { CommentMoreButton } from "./CommentMoreButton";  
+import { CommentMoreButton } from "./CommentMoreButton";
 interface CommentProps {
   comment: CommentData;
 }
 
 export function Comment({ comment }: CommentProps) {
-
   const { user } = useSession();
-
-
 
   return (
     <div className="group/comment flex gap-3 py-3">
@@ -41,8 +38,11 @@ export function Comment({ comment }: CommentProps) {
         <div>{comment.content}</div>
       </div>
       {user?.id === comment.user.id && (
-        <CommentMoreButton comment={comment} className="mx-auto opacity-0 transition-opacity group-hover/comment:opacity-100"/>
+        <CommentMoreButton
+          comment={comment}
+          className="mx-auto opacity-0 transition-opacity group-hover/comment:opacity-100"
+        />
       )}
     </div>
-  )
+  );
 }
