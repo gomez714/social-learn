@@ -12,7 +12,7 @@ import { Loader2 } from "lucide-react";
 import Linkify from "@/components/Linkify";
 import FollowButton from "@/components/FollowButton";
 
-interface PageProps {
+interface PostPageProps {
   params: {
     postId: string;
   };
@@ -32,7 +32,7 @@ const getPost = cache(async (postId: string, loggedInUserId: string) => {
 
 export async function generateMetadata({
   params: { postId },
-}: PageProps): Promise<Metadata> {
+}: PostPageProps): Promise<Metadata> {
   const { user } = await validateRequest();
 
   if (!user) return {};
@@ -44,7 +44,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function PostPage({ params: { postId } }: PageProps) {
+export default async function PostPage({ params: { postId } }: PostPageProps) {
   const { user } = await validateRequest();
 
   if (!user) {
