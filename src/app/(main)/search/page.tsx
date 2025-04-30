@@ -2,21 +2,23 @@ import TrendsSidebar from "@/components/TrendsSidebar";
 import { Metadata } from "next";
 import SearchResults from "./SearchResults";
 
-interface SearchPageProps {
-  searchParams: {
-    q: string;
-  };
-}
-
-export function generateMetadata({
-  searchParams: { q },
-}: SearchPageProps): Metadata {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ q: string }>;
+}): Promise<Metadata> {
+  const { q } = await params;
   return {
     title: `Search results for "${q}"`,
   };
 }
 
-export default function SearchPage({ searchParams: { q } }: SearchPageProps) {
+export default async function SearchPage({
+  params,
+}: {
+  params: Promise<{ q: string }>;
+}) {
+  const { q } = await params;
   return (
     <main className="flex w-full min-w-0 gap-5">
       <div className="w-full min-w-0 space-y-5">
