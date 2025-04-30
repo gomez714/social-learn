@@ -6,7 +6,7 @@ import Navbar from "./Navbar";
 import MenuBar from "./MenuBar";
 export default async function Layout({ children }: { children: ReactNode }) {
   const session = await validateRequest();
-  if (!session.user) redirect("/");
+  if (!session.user) redirect("/login");
 
   return (
     <SessionProvider value={session}>
