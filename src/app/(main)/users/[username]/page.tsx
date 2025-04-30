@@ -14,12 +14,6 @@ import UserPosts from "./UserPosts";
 import Linkify from "@/components/Linkify";
 import EditProfileButton from "./EditProfileButton";
 
-interface UserPageProps {
-  params: {
-    username: string;
-  };
-}
-
 const getUser = cache(async (username: string, loggedInUserId: string) => {
   const user = await prisma.user.findFirst({
     where: {
@@ -36,13 +30,15 @@ const getUser = cache(async (username: string, loggedInUserId: string) => {
 });
 
 export async function generateMetadata({
-  params: { username },
-}: UserPageProps): Promise<Metadata> {
+  params,
+}: {
+  params: { username: string };
+}): Promise<Metadata> {
   const { user: loggedInUser } = await validateRequest();
 
   if (!loggedInUser) return {};
 
-  const user = await getUser(username, loggedInUser.id);
+  const user = await getUser(params.username, loggedInUser.id);
 
   return {
     title: `${user.displayName} (@${user.username})`,
@@ -50,8 +46,10 @@ export async function generateMetadata({
 }
 
 export default async function UserPage({
-  params: { username },
-}: UserPageProps) {
+  params,
+}: {
+  params: { username: string };
+}) {
   const { user: loggedInUser } = await validateRequest();
 
   if (!loggedInUser) {
@@ -62,7 +60,7 @@ export default async function UserPage({
     );
   }
 
-  const user = await getUser(username, loggedInUser.id);
+  const user = await getUser(params.username, loggedInUser.id);
 
   return (
     <main className="flex w-full min-w-0 gap-5">

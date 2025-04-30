@@ -12,12 +12,6 @@ import { Loader2 } from "lucide-react";
 import Linkify from "@/components/Linkify";
 import FollowButton from "@/components/FollowButton";
 
-interface PostPageProps {
-  params: {
-    postId: string;
-  };
-}
-
 const getPost = cache(async (postId: string, loggedInUserId: string) => {
   const post = await prisma.post.findFirst({
     where: {
@@ -31,20 +25,26 @@ const getPost = cache(async (postId: string, loggedInUserId: string) => {
 });
 
 export async function generateMetadata({
-  params: { postId },
-}: PostPageProps): Promise<Metadata> {
+  params,
+}: {
+  params: { postId: string };
+}): Promise<Metadata> {
   const { user } = await validateRequest();
 
   if (!user) return {};
 
-  const post = await getPost(postId, user.id);
+  const post = await getPost(params.postId, user.id);
 
   return {
     title: `${post.user.displayName}: ${post.content.slice(0, 50)}...`,
   };
 }
 
-export default async function PostPage({ params: { postId } }: PostPageProps) {
+export default async function PostPage({
+  params,
+}: {
+  params: { postId: string };
+}) {
   const { user } = await validateRequest();
 
   if (!user) {
@@ -55,7 +55,7 @@ export default async function PostPage({ params: { postId } }: PostPageProps) {
     );
   }
 
-  const post = await getPost(postId, user.id);
+  const post = await getPost(params.postId, user.id);
 
   return (
     <main className="flex w-full min-w-0 gap-5">
