@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { Eye, EyeOff } from "lucide-react";
 
 const PasswordInput = forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, ...props }, ref) => {
+  ({ className, ...props }, ref) => {
     const [showPassword, setShowPassword] = useState(false);
 
     return (
